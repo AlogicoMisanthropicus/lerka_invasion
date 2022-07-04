@@ -25,17 +25,44 @@ class LerkaInvasion():
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
         while True:
-            #Oczekiwanie na naciśnięcie klawisza lub przycisku myszy.
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self._check_events()
+            self.ship.update()
+            self._update_screen()
 
-            #Odświeżenie ekranu w trakcie każdej iteracji pętli.
-            self.screen.fill(self.settings.bg_color)
-            self.ship.blitme()
+    def _check_events(self):
+        """Reakcja na zdarzenia generowane przez klawiaturę i mysz."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                self._check_keydown_events(event)
+            elif event.type == pygame.KEYUP:
+                self._check_keyup_events(event)
 
-            #Wyświetelenie ostatnio zmodyfikowanego ekranu.
-            pygame.display.flip()
+    def _check_keydown_events(self, event):
+        """Reakcja na naciśnięcie klawisza."""
+        if event.key == pygame.K_UP:
+            self.ship.moving_up = True
+        elif event.key == pygame.K_DOWN:
+            self.ship.moving_down = True
+        elif event.key == pygame.K_q:
+            sys.exit()
+
+    def _check_keyup_events(self, event):
+        """Reakcja na zwolnienie klawisza."""
+        if event.key == pygame.K_UP:
+            self.ship.moving_up = False
+        elif event.key == pygame.K_DOWN:
+            self.ship.moving_down = False
+
+    def _update_screen(self):
+        """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
+        #Odświeżenie ekranu w trakcie każdej iteracji pętli.
+        self.screen.fill(self.settings.bg_color)
+        self.ship.blitme()
+
+        #Wyświetelenie ostatnio zmodyfikowanego ekranu.
+        pygame.display.flip()
 
 if __name__ == '__main__':
     li = LerkaInvasion()
