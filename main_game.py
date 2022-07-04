@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from settings import Settings
+from ship import Ship
 
 class LerkaInvasion():
     """
@@ -19,6 +20,8 @@ class LerkaInvasion():
             (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("LERKA Invasion")
 
+        self.ship = Ship(self)
+
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
         while True:
@@ -29,6 +32,7 @@ class LerkaInvasion():
 
             #Odświeżenie ekranu w trakcie każdej iteracji pętli.
             self.screen.fill(self.settings.bg_color)
+            self.ship.blitme()
 
             #Wyświetelenie ostatnio zmodyfikowanego ekranu.
             pygame.display.flip()
