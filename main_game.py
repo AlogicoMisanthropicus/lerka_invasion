@@ -5,8 +5,9 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from lerka import Lerka
 
-class LerkaInvasion():
+class LerkaInvasion:
     """
     Ogólna klasa przeznaczona do zarządzania zasobami i sposobem 
     działania gry.
@@ -24,6 +25,9 @@ class LerkaInvasion():
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.lerkas = pygame.sprite.Group()
+
+        self._create_fleet()
 
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
@@ -80,6 +84,12 @@ class LerkaInvasion():
             if bullet.rect.left >= self.settings.screen_width:
                 self.bullets.remove(bullet)
 
+    def _create_fleet(self):
+        """Utworzenie pełnej floty Lerków."""
+        #Utworzenie Lerki.
+        lerka = Lerka(self)
+        self.lerkas.add(lerka)
+
 
     def _update_screen(self):
         """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
@@ -88,6 +98,7 @@ class LerkaInvasion():
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        self.lerkas.draw(self.screen)
 
         #Wyświetelenie ostatnio zmodyfikowanego ekranu.
         pygame.display.flip()
