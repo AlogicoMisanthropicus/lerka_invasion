@@ -10,7 +10,10 @@ class Settings:
         self.ship_speed = 1.9
         #Ustawienia dotyczące pocisku.
         self.bullet_speed = 1.9
-        self.bullet_width = 15
-        self.bullet_height = 7
+        self.bullet_width = 20
+        self.bullet_height = 8
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 3
+        self.lerka_speed = 1.2
+        self.fleet_move_speed = 60
+        self.fleet_direction = 1

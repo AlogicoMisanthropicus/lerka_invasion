@@ -35,6 +35,7 @@ class LerkaInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_lerka()
             self._update_screen()
 
     def _check_events(self):
@@ -84,12 +85,60 @@ class LerkaInvasion:
             if bullet.rect.left >= self.settings.screen_width:
                 self.bullets.remove(bullet)
 
+        collisions = pygame.sprite.groupcollide(
+            self.bullets, self.lerkas, True, True)
+
+        if not self.lerkas:
+            #Pozbycie się istniejących pocisków i utworzenie nowej floty.
+            self.bullets.empty()
+            self._create_fleet()
+
+    def _update_lerka(self):
+        """Uaktualnienie położenia wszystkich obcych we flocie."""
+        self._check_fleet_edges()
+        self.lerkas.update()
+
     def _create_fleet(self):
         """Utworzenie pełnej floty Lerków."""
-        #Utworzenie Lerki.
         lerka = Lerka(self)
+        lerka_height, lerka_width = lerka.rect.size
+        available_space_y = self.settings.screen_height - lerka_height
+        number_lerkas_y = available_space_y // (2 * lerka_height)
+
+        ship_width = self.ship.rect.width
+        available_space_x = (self.settings.screen_width -
+            (2 * lerka_width) - ship_width)
+        number_rows = available_space_x // (2 * lerka_width)
+
+        for row_number in range(number_rows):
+            for lerka_number in range(number_lerkas_y):
+                self._create_lerka(lerka_number, row_number)
+
+    def _create_lerka(self, lerka_number, row_number):
+        """Utworzenie Lerki i umieszczenie go w rzędzie."""
+        lerka = Lerka(self)
+        lerka_height, lerka_width = lerka.rect.size
+        #lerka.y = (lerka_height + 2 * lerka_height * lerka_number)
+        #lerka.y = (2 * lerka_height * lerka_number + random_number)
+        lerka.y = lerka_height + 2 * lerka_height * lerka_number
+        lerka.rect.y = lerka.y
+        lerka.x = ((self.settings.screen_width + 5 * lerka.rect.width)
+            - 2 * lerka.rect.width * row_number)
+        lerka.rect.x = lerka.x
         self.lerkas.add(lerka)
 
+    def _check_fleet_edges(self):
+        """Odpowiednia reakcja, gdy obcy dotrze do krawędzi ekranu."""
+        for lerka in self.lerkas.sprites():
+            if lerka.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Zmiana kierunku floty."""
+        for lerka in self.lerkas.sprites():
+            lerka.rect.x -= self.settings.fleet_move_speed
+        self.settings.fleet_direction *= -1
 
     def _update_screen(self):
         """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
