@@ -85,6 +85,12 @@ class LerkaInvasion:
             if bullet.rect.left >= self.settings.screen_width:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_lerka_collisions()
+
+    def _check_bullet_lerka_collisions(self):
+        """Reakcja na kolizję między pociskiem a Lerką."""
+        #Usunięcie wszystkich pocisków i Lerków, między którymi doszło 
+        #do kolizji.
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.lerkas, True, True)
 
