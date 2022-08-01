@@ -27,6 +27,8 @@ class Lerka(Sprite):
             return True
 
     def update(self):
-        """Przesunięcie Lerki w dół."""
-        self.y += self.settings.lerka_speed * self.settings.fleet_direction
+        """Przesunięcie Lerki w stronę statku zygzakiem."""
+        self.y += self.settings.lerka_speed_y * self.settings.fleet_direction
         self.rect.y = self.y
+        self.x -= self.settings.lerka_speed_x
+        self.rect.x = self.x

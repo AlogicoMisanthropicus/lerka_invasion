@@ -1,8 +1,10 @@
 import sys
+from time import sleep
 
 import pygame
 
 from settings import Settings
+from game_stats import GameStats
 from ship import Ship
 from bullet import Bullet
 from lerka import Lerka
@@ -23,6 +25,8 @@ class LerkaInvasion:
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("LERKA Invasion")
 
+        self.stats = GameStats(self)
+
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.lerkas = pygame.sprite.Group()
@@ -33,11 +37,14 @@ class LerkaInvasion:
         """Rozpoczęcie pętli głównej gry."""
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_lerka()
-            self._update_screen()
 
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_lerkas()
+
+            self._update_screen()
+   
     def _check_events(self):
         """Reakcja na zdarzenia generowane przez klawiaturę i mysz."""
         for event in pygame.event.get():
@@ -94,15 +101,25 @@ class LerkaInvasion:
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.lerkas, True, True)
 
+        #Ćwiczenie 13.6 (s. 361 ) - trafienia Lerków:
+        #if collisions:
+        #    self.stats.lerka_hit += 1
+        #    print(f"Trafiono {self.stats.lerka_hit} Lerków!")
+
         if not self.lerkas:
             #Pozbycie się istniejących pocisków i utworzenie nowej floty.
             self.bullets.empty()
             self._create_fleet()
-
-    def _update_lerka(self):
+ 
+    def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""
         self._check_fleet_edges()
         self.lerkas.update()
+        #Wykrywanie kolizji między Lerką a statkiem.
+        if pygame.sprite.spritecollideany(self.ship, self.lerkas):
+            self._ship_hit()
+
+        self._check_lerkas_left()
 
     def _create_fleet(self):
         """Utworzenie pełnej floty Lerków."""
@@ -143,8 +160,27 @@ class LerkaInvasion:
     def _change_fleet_direction(self):
         """Zmiana kierunku floty."""
         for lerka in self.lerkas.sprites():
-            lerka.rect.x -= self.settings.fleet_move_speed
+            lerka.rect.y -= self.settings.lerka_speed_y
         self.settings.fleet_direction *= -1
+
+    def _ship_hit(self):
+        """Reakcja na uderzenie Lerki w statek."""
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
+            self.lerkas.empty()
+            self.bullets.empty()
+            self._create_fleet()
+            self.ship.center_ship()
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
+
+    def _check_lerkas_left(self):
+        screen_rect = self.screen.get_rect()
+        for lerka in self.lerkas.sprites():
+            if lerka.rect.left <= screen_rect.left:
+                self._ship_hit()
+                break
 
     def _update_screen(self):
         """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
