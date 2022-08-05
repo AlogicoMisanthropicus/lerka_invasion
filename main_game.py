@@ -119,7 +119,7 @@ class LerkaInvasion:
         if pygame.sprite.spritecollideany(self.ship, self.lerkas):
             self._ship_hit()
 
-        self._check_lerkas_left()
+        self._check_lerkas_left_scr()
 
     def _create_fleet(self):
         """Utworzenie pełnej floty Lerków."""
@@ -175,10 +175,10 @@ class LerkaInvasion:
         else:
             self.stats.game_active = False
 
-    def _check_lerkas_left(self):
+    def _check_lerkas_left_scr(self):
         screen_rect = self.screen.get_rect()
         for lerka in self.lerkas.sprites():
-            if lerka.rect.left <= screen_rect.left:
+            if lerka.rect.left <= (screen_rect.left - 0.5 * lerka.rect.height):
                 self._ship_hit()
                 break
 
