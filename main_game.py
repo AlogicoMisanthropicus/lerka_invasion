@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from button import Button
 from ship import Ship
 from bullet import Bullet
 from lerka import Lerka
@@ -33,6 +34,8 @@ class LerkaInvasion:
 
         self._create_fleet()
 
+        self.play_button = Button(self, "LERKA Invasion")
+
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
         while True:
@@ -54,7 +57,15 @@ class LerkaInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
 
+    def _check_play_button(self, mouse_pos):
+        """Rozpoczęcie nowej gry po kliknięciu przycisku."""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            self._start_game()
     def _check_keydown_events(self, event):
         """Reakcja na naciśnięcie klawisza."""
         if event.key == pygame.K_UP:
@@ -65,7 +76,8 @@ class LerkaInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
-
+        elif event.key == pygame.K_g:
+            self._start_game()
     def _check_keyup_events(self, event):
         """Reakcja na zwolnienie klawisza."""
         if event.key == pygame.K_UP:
@@ -73,9 +85,19 @@ class LerkaInvasion:
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = False
 
+    def _start_game(self):
+        self.stats.reset_stats()
+        self.stats.game_active = True
+        self.lerkas.empty()
+        self.bullets.empty()
+        self._create_fleet()
+        self.ship.center_ship()
+        pygame.mouse.set_visible(False)
+
     def _fire_bullet(self):
         """Utworzenie nowego pocisku i dodanie go do grupy pocisków."""
-        if len(self.bullets) < self.settings.bullets_allowed:
+        if len(self.bullets) < self.settings.bullets_allowed and (
+            self.stats.game_active):
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
@@ -174,6 +196,7 @@ class LerkaInvasion:
             sleep(0.5)
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def _check_lerkas_left_scr(self):
         screen_rect = self.screen.get_rect()
@@ -190,6 +213,9 @@ class LerkaInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.lerkas.draw(self.screen)
+
+        if not self.stats.game_active:
+            self.play_button.draw_button()
 
         #Wyświetelenie ostatnio zmodyfikowanego ekranu.
         pygame.display.flip()
