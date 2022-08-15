@@ -77,7 +77,8 @@ class LerkaInvasion:
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_g:
-            self._start_game()
+            if not self.stats.game_active:
+                self._start_game()
     def _check_keyup_events(self, event):
         """Reakcja na zwolnienie klawisza."""
         if event.key == pygame.K_UP:
@@ -93,6 +94,7 @@ class LerkaInvasion:
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
+        self.settings.initialize_dynamic_settings()
 
     def _fire_bullet(self):
         """Utworzenie nowego pocisku i dodanie go do grupy pocisków."""
@@ -132,6 +134,7 @@ class LerkaInvasion:
             #Pozbycie się istniejących pocisków i utworzenie nowej floty.
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
  
     def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""
@@ -147,12 +150,12 @@ class LerkaInvasion:
         """Utworzenie pełnej floty Lerków."""
         lerka = Lerka(self)
         lerka_height, lerka_width = lerka.rect.size
-        available_space_y = self.settings.screen_height - lerka_height
+        available_space_y = self.settings.screen_height - 2 * lerka_height
         number_lerkas_y = available_space_y // (2 * lerka_height)
 
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_width -
-            (2 * lerka_width) - ship_width)
+            (5 * lerka_width) - ship_width)
         number_rows = available_space_x // (2 * lerka_width)
 
         for row_number in range(number_rows):
@@ -193,7 +196,7 @@ class LerkaInvasion:
             self.bullets.empty()
             self._create_fleet()
             self.ship.center_ship()
-            sleep(0.5)
+            sleep(0.8)
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
