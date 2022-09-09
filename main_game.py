@@ -36,6 +36,26 @@ class LerkaInvasion:
 
         self.play_button = Button(self, "LERKA Invasion")
 
+        self._make_difficulty_buttons()
+
+    def _make_difficulty_buttons(self):
+        """Stwarza przyciski do wyboru poziomu trudności."""
+        self.easy_button = Button(self, "Łatwy")
+        self.medium_button = Button(self, "Średni")
+        self.hard_button = Button(self, "Piekło")
+
+        self.easy_button.rect.top = (
+            self.play_button.rect.top + 1.5*self.play_button.rect.height)
+        self.easy_button._update_msg_position()
+
+        self.medium_button.rect.top = (
+            self.easy_button.rect.top + 1.5*self.play_button.rect.height)
+        self.medium_button._update_msg_position()
+
+        self.hard_button.rect.top = (
+            self.medium_button.rect.top + 1.5*self.play_button.rect.height)
+        self.hard_button._update_msg_position()
+
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
         while True:
@@ -49,7 +69,7 @@ class LerkaInvasion:
             self._update_screen()
    
     def _check_events(self):
-        """Reakcja na zdarzenia generowane przez klawiaturę i mysz."""
+        """Reakcja na zdarzenia klawiatura/mysz."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
@@ -60,12 +80,27 @@ class LerkaInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+                self._check_difficulty_buttons(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
         """Rozpoczęcie nowej gry po kliknięciu przycisku."""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
             self._start_game()
+
+    def _check_difficulty_buttons(self, mouse_pos):
+        """Ustawienie wybranego poziomu trudności."""
+        easy_button_clicked = self.easy_button.rect.collidepoint(mouse_pos)
+        medium_button_clicked = self.medium_button.rect.collidepoint(mouse_pos)
+        hard_button_clicked = self.hard_button.rect.collidepoint(mouse_pos)
+
+        if easy_button_clicked:
+            self.settings.difficulty_level = 'easy'
+        elif medium_button_clicked:
+            self.settings.difficulty_level = 'medium'
+        elif hard_button_clicked:
+            self.settings.difficulty_level = 'hard'
+
     def _check_keydown_events(self, event):
         """Reakcja na naciśnięcie klawisza."""
         if event.key == pygame.K_UP:
@@ -87,6 +122,7 @@ class LerkaInvasion:
             self.ship.moving_down = False
 
     def _start_game(self):
+        self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
         self.lerkas.empty()
@@ -94,8 +130,7 @@ class LerkaInvasion:
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
-        self.settings.initialize_dynamic_settings()
-
+        
     def _fire_bullet(self):
         """Utworzenie nowego pocisku i dodanie go do grupy pocisków."""
         if len(self.bullets) < self.settings.bullets_allowed and (
@@ -219,6 +254,9 @@ class LerkaInvasion:
 
         if not self.stats.game_active:
             self.play_button.draw_button()
+            self.easy_button.draw_button()
+            self.medium_button.draw_button()
+            self.hard_button.draw_button()
 
         #Wyświetelenie ostatnio zmodyfikowanego ekranu.
         pygame.display.flip()
