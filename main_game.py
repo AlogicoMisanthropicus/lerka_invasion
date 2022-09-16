@@ -1,5 +1,6 @@
 import sys
 from time import sleep
+import json
 
 import pygame
 
@@ -74,7 +75,7 @@ class LerkaInvasion:
         """Reakcja na zdarzenia klawiatura/mysz."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                self._exit_game()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
@@ -110,7 +111,7 @@ class LerkaInvasion:
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = True
         elif event.key == pygame.K_q:
-            sys.exit()
+            self._exit_game()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
         elif event.key == pygame.K_g:
@@ -252,6 +253,15 @@ class LerkaInvasion:
             if lerka.rect.left <= (screen_rect.left - 0.5 * lerka.rect.height):
                 self._ship_hit()
                 break
+
+    def _exit_game(self):
+        """Zapisuje najlepszy wynik i zamyka grę."""
+        old_high_score = self.stats.get_old_high_score()
+        if self.stats.high_score > old_high_score:
+            with open('high_score.json', 'w') as f:
+                json.dump(self.stats.high_score, f)
+
+        sys.exit()
 
     def _update_screen(self):
         """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
