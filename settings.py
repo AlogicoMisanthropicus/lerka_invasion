@@ -17,6 +17,7 @@ class Settings:
 
         self.speedup_scale = 1.1
         self.speedup_scale_lerka = 0.028
+        self.score_scale = 1.5
 
         self.difficulty_level = 'medium'
 
@@ -31,6 +32,7 @@ class Settings:
             self.bullet_speed = 1.9
             self.lerka_speed_x = 0.09
             self.lerka_speed_y = 0.09
+            self.lerka_points = 30
         elif self.difficulty_level == 'medium':
             self.ship_limit = 2
             self.bullets_allowed = 3
@@ -38,13 +40,15 @@ class Settings:
             self.bullet_speed = 3.0
             self.lerka_speed_x = 0.2
             self.lerka_speed_y = 0.2
+            self.lerka_points = 50
         elif self.difficulty_level == 'hard':
-            self.ship_limit = 0
+            self.ship_limit = 1
             self.bullets_allowed = 3
             self.ship_speed = 3.0
             self.bullet_speed = 8.0
-            self.lerka_speed_x = 0.78
-            self.lerka_speed_y = 0.78
+            self.lerka_speed_x = 0.48
+            self.lerka_speed_y = 0.48
+            self.lerka_points = 80
 
         self.fleet_direction = 1
 
@@ -54,3 +58,4 @@ class Settings:
         self.bullet_speed *= self.speedup_scale
         self.lerka_speed_x += self.speedup_scale_lerka
         self.lerka_speed_y += self.speedup_scale_lerka
+        self.lerka_points = int(self.lerka_points * self.score_scale)

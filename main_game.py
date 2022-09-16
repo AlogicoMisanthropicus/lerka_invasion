@@ -5,6 +5,7 @@ import pygame
 
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -27,6 +28,7 @@ class LerkaInvasion:
         pygame.display.set_caption("LERKA Invasion")
 
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -125,6 +127,9 @@ class LerkaInvasion:
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
+        self.sb.prep_score()
+        self.sb.prep_level()
+        self.sb.prep_ships()
         self.lerkas.empty()
         self.bullets.empty()
         self._create_fleet()
@@ -160,16 +165,20 @@ class LerkaInvasion:
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.lerkas, True, True)
 
-        #Ćwiczenie 13.6 (s. 361 ) - trafienia Lerków:
-        #if collisions:
-        #    self.stats.lerka_hit += 1
-        #    print(f"Trafiono {self.stats.lerka_hit} Lerków!")
+        if collisions:
+            for lerkas in collisions.values():
+                self.stats.score += self.settings.lerka_points * len(lerkas)
+            self.sb.prep_score()
+            self.sb.check_high_score()
 
         if not self.lerkas:
             #Pozbycie się istniejących pocisków i utworzenie nowej floty.
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.sb.prep_level()
  
     def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""
@@ -227,6 +236,7 @@ class LerkaInvasion:
         """Reakcja na uderzenie Lerki w statek."""
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             self.lerkas.empty()
             self.bullets.empty()
             self._create_fleet()
@@ -251,6 +261,8 @@ class LerkaInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.lerkas.draw(self.screen)
+
+        self.sb.show_score()
 
         if not self.stats.game_active:
             self.play_button.draw_button()

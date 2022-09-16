@@ -1,4 +1,5 @@
 import pygame
+from ships_image import ShipsImage
 
 class Ship:
     """Klasa przeznaczona do zarządzania statkiem kosmicznym."""
@@ -21,6 +22,8 @@ class Ship:
         # liczby zmiennoprzecinkowej.
         self.y = float(self.rect.y)
 
+        self.ship_image = ShipsImage(self)
+
         #Opcje wskazujące na poruszanie się statku.
         self.moving_up = False
         self.moving_down = False
@@ -31,14 +34,13 @@ class Ship:
         na jego ruch.
         """
         #Uaktualnienie wartości współrzędnej Y statku, a nie jego prostokąta.
-        if self.moving_up and self.rect.top > 2:
+        if self.moving_up and self.rect.top > self.ship_image.rect.height + 10:
             self.y -= self.settings.ship_speed
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.y += self.settings.ship_speed
 
         #Uaktualnienie obiektu rect na podstawie wartości self.y.
         self.rect.y = self.y
-
 
     def blitme(self):
         """Wyświetla statek kosmiczny w jego aktualnym położeniu."""

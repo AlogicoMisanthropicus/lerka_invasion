@@ -1,6 +1,8 @@
 import pygame
 from pygame.sprite import Sprite
 
+from ships_image import ShipsImage
+
 class Lerka(Sprite):
     """Klasa przedstawiająca jednego Lerkę we flocie."""
 
@@ -14,6 +16,8 @@ class Lerka(Sprite):
         self.image = pygame.image.load('images/lerka.bmp')
         self.rect = self.image.get_rect()
 
+        self.ship_image = ShipsImage(self)
+
         self.rect.topright = self.screen_rect.topright
         self.y = self.rect.y
 
@@ -23,7 +27,7 @@ class Lerka(Sprite):
         """
         screen_rect = self.screen.get_rect()
         if self.rect.bottom >= screen_rect.height or (self.rect.top <=
-         screen_rect.top):
+         self.ship_image.rect.bottom + 10):
             return True
 
     def update(self):
