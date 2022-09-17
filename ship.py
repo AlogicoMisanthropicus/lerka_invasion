@@ -27,6 +27,8 @@ class Ship:
         #Opcje wskazujące na poruszanie się statku.
         self.moving_up = False
         self.moving_down = False
+        self.moving_left = False
+        self.moving_right = False
 
     def update(self):
         """
@@ -38,9 +40,14 @@ class Ship:
             self.y -= self.settings.ship_speed
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.y += self.settings.ship_speed
+        if self.moving_left and self.rect.left > self.screen_rect.left:
+            self.x -= self.settings.ship_speed
+        if self.moving_right and self.rect.right < self.screen_rect.width:
+            self.x += self.settings.ship_speed
 
         #Uaktualnienie obiektu rect na podstawie wartości self.y.
         self.rect.y = self.y
+        self.rect.x = self.x
 
     def blitme(self):
         """Wyświetla statek kosmiczny w jego aktualnym położeniu."""
@@ -52,3 +59,4 @@ class Ship:
         """
         self.rect.midleft = self.screen_rect.midleft
         self.y = float(self.rect.y)
+        self.x = float(self.rect.x)

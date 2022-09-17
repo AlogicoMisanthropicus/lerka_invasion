@@ -110,6 +110,10 @@ class LerkaInvasion:
             self.ship.moving_up = True
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = True
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = True
+        elif event.key == pygame.K_RIGHT:
+            self.ship.moving_right = True
         elif event.key == pygame.K_q:
             self._exit_game()
         elif event.key == pygame.K_SPACE:
@@ -123,6 +127,10 @@ class LerkaInvasion:
             self.ship.moving_up = False
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = False
+        elif event.key == pygame.K_LEFT:
+            self.ship.moving_left = False
+        elif event.key == pygame.K_RIGHT:
+            self.ship.moving_right = False
 
     def _start_game(self):
         self.settings.initialize_dynamic_settings()
