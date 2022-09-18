@@ -180,8 +180,6 @@ class LerkaInvasion:
 
     def _check_bullet_lerka_collisions(self):
         """Reakcja na kolizję między pociskiem a Lerką."""
-        #Usunięcie wszystkich pocisków i Lerków, między którymi doszło 
-        #do kolizji.
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.lerkas, True, True)
 
@@ -191,16 +189,7 @@ class LerkaInvasion:
             self.sb.prep_score()
             self.sb.check_high_score()
 
-        if not self.lerkas:
-            #Pozbycie się istniejących pocisków i utworzenie nowej floty.
-            self.bullets.empty()
-            self.missles_a.empty()
-            self.missles_b.empty()
-            self._create_fleet()
-            self.settings.increase_speed()
-
-            self.stats.level += 1
-            self.sb.prep_level()
+        self._lerkas_end()
 
     def _fire_missle_a(self):
         """Utworzenie nowego pocisku A i dodanie go do grupy pocisków A."""
@@ -218,6 +207,21 @@ class LerkaInvasion:
             if misslea.rect.bottom <= 0:
                 self.missles_a.remove(misslea)
 
+        self._check_misslea_lerka_collisions()
+
+    def _check_misslea_lerka_collisions(self):
+        """Reakcja na kolizję między pociskiem A i Lerką."""
+        collisions_a = pygame.sprite.groupcollide(
+            self.missles_a, self.lerkas, True, True)
+
+        if collisions_a:
+            for lerkas in collisions_a.values():
+                self.stats.score += self.settings.lerka_points * len(lerkas)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
+        self._lerkas_end()
+
     def _fire_missle_b(self):
         """Utworzenie nowego pocisku B i dodanie go do grupy pocisków B."""
         if len(self.missles_b) < self.settings.missles_allowed and (
@@ -233,6 +237,21 @@ class LerkaInvasion:
         for missleb in self.missles_b.copy():
             if missleb.rect.top >= self.settings.screen_height:
                 self.missles_b.remove(missleb)
+
+        self._check_missleb_lerka_collisions()
+
+    def _check_missleb_lerka_collisions(self):
+        """Reakcja na kolizję między pociskiem B i Lerką."""
+        collisions_b = pygame.sprite.groupcollide(
+            self.missles_b, self.lerkas, True, True)
+
+        if collisions_b:
+            for lerkas in collisions_b.values():
+                self.stats.score += self.settings.lerka_points * len(lerkas)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
+        self._lerkas_end()
  
     def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""
@@ -243,6 +262,20 @@ class LerkaInvasion:
             self._ship_hit()
 
         self._check_lerkas_left_scr()
+
+    def _lerkas_end(self):
+        """Działania po zestrzeleniu floty Lerków: pozbycie się pocisków, 
+        tworzenie nowej floty, zwiększenie prędkości i poziomu etc."""
+        if not self.lerkas:
+            #Pozbycie się istniejących pocisków i utworzenie nowej floty.
+            self.bullets.empty()
+            self.missles_a.empty()
+            self.missles_b.empty()
+            self._create_fleet()
+            self.settings.increase_speed()
+
+            self.stats.level += 1
+            self.sb.prep_level()
 
     def _create_fleet(self):
         """Utworzenie pełnej floty Lerków."""
