@@ -10,6 +10,8 @@ from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
+from missle_a import MissleA
+from missle_b import MissleB
 from lerka import Lerka
 
 class LerkaInvasion:
@@ -34,6 +36,8 @@ class LerkaInvasion:
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.lerkas = pygame.sprite.Group()
+        self.missles_a = pygame.sprite.Group()
+        self.missles_b = pygame.sprite.Group()
 
         self._create_fleet()
 
@@ -68,6 +72,8 @@ class LerkaInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_lerkas()
+                self._update_missles_a()
+                self._update_missles_b()
 
             self._update_screen()
    
@@ -118,6 +124,9 @@ class LerkaInvasion:
             self._exit_game()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key == pygame.K_LCTRL:
+            self._fire_missle_a()
+            self._fire_missle_b()
         elif event.key == pygame.K_g:
             if not self.stats.game_active:
                 self._start_game()
@@ -141,6 +150,8 @@ class LerkaInvasion:
         self.sb.prep_ships()
         self.lerkas.empty()
         self.bullets.empty()
+        self.missles_a.empty()
+        self.missles_b.empty()
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
@@ -183,11 +194,45 @@ class LerkaInvasion:
         if not self.lerkas:
             #Pozbycie się istniejących pocisków i utworzenie nowej floty.
             self.bullets.empty()
+            self.missles_a.empty()
+            self.missles_b.empty()
             self._create_fleet()
             self.settings.increase_speed()
 
             self.stats.level += 1
             self.sb.prep_level()
+
+    def _fire_missle_a(self):
+        """Utworzenie nowego pocisku A i dodanie go do grupy pocisków A."""
+        if len(self.missles_a) < self.settings.missles_allowed and (
+            self.stats.game_active):
+            new_misslea = MissleA(self)
+            self.missles_a.add(new_misslea)
+
+    def _update_missles_a(self):
+        """Uaktualnienie położenia pocisków A i usunięcie niewidocznych 
+        na ekranie."""
+        self.missles_a.update()
+
+        for misslea in self.missles_a.copy():
+            if misslea.rect.bottom <= 0:
+                self.missles_a.remove(misslea)
+
+    def _fire_missle_b(self):
+        """Utworzenie nowego pocisku B i dodanie go do grupy pocisków B."""
+        if len(self.missles_b) < self.settings.missles_allowed and (
+            self.stats.game_active):
+            new_missleb = MissleB(self)
+            self.missles_b.add(new_missleb)
+
+    def _update_missles_b(self):
+        """Uaktualnienie położenia pocisków B i usunięcie niewidocznych 
+        na ekranie."""
+        self.missles_b.update()
+
+        for missleb in self.missles_b.copy():
+            if missleb.rect.top >= self.settings.screen_height:
+                self.missles_b.remove(missleb)
  
     def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""
@@ -248,6 +293,8 @@ class LerkaInvasion:
             self.sb.prep_ships()
             self.lerkas.empty()
             self.bullets.empty()
+            self.missles_a.empty()
+            self.missles_b.empty()
             self._create_fleet()
             self.ship.center_ship()
             sleep(0.8)
@@ -278,6 +325,10 @@ class LerkaInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        for misslea in self.missles_a.sprites():
+            misslea.draw_misslea()
+        for missleb in self.missles_b.sprites():
+            missleb.draw_missleb()
         self.lerkas.draw(self.screen)
 
         self.sb.show_score()

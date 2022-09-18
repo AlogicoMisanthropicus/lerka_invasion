@@ -3,7 +3,8 @@ from pygame.sprite import Sprite
 
 class Bullet(Sprite):
     """
-    Klasa przeznaczona do zarządzania pociskami wystrzelonymi przez statek.
+    Klasa przeznaczona do zarządzania pociskami (przednimi) wystrzelonymi 
+    przez statek.
     """
 
     def __init__(self, li_game):

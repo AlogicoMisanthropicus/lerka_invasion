@@ -14,6 +14,9 @@ class Settings:
         #self.lerka_speed = 1.2
         #self.fleet_move_speed_x = 60
         #self.fleet_move_speed_y = 60
+        self.missleab_width = 5
+        self.missleab_height = 18
+        self.missleab_color = (60, 60, 60)
 
         self.speedup_scale = 1.1
         self.speedup_scale_lerka = 0.028
@@ -30,6 +33,8 @@ class Settings:
             self.bullets_allowed = 5
             self.ship_speed = 1.2
             self.bullet_speed = 1.9
+            self.missles_speed = 1.0
+            self.missles_allowed = 1
             self.lerka_speed_x = 0.09
             self.lerka_speed_y = 0.09
             self.lerka_points = 30
@@ -38,6 +43,8 @@ class Settings:
             self.bullets_allowed = 3
             self.ship_speed = 1.9
             self.bullet_speed = 3.0
+            self.missles_speed = 2.0
+            self.missles_allowed = 2
             self.lerka_speed_x = 0.2
             self.lerka_speed_y = 0.2
             self.lerka_points = 50
@@ -46,6 +53,8 @@ class Settings:
             self.bullets_allowed = 3
             self.ship_speed = 3.0
             self.bullet_speed = 8.0
+            self.missles_speed = 3.0
+            self.missles_allowed = 3
             self.lerka_speed_x = 0.48
             self.lerka_speed_y = 0.48
             self.lerka_points = 80
