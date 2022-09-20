@@ -145,9 +145,7 @@ class LerkaInvasion:
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
-        self.sb.prep_score()
-        self.sb.prep_level()
-        self.sb.prep_ships()
+        self.sb.prep_images()
         self.lerkas.empty()
         self.bullets.empty()
         self.missles_a.empty()
@@ -182,13 +180,7 @@ class LerkaInvasion:
         """Reakcja na kolizję między pociskiem a Lerką."""
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.lerkas, True, True)
-
-        if collisions:
-            for lerkas in collisions.values():
-                self.stats.score += self.settings.lerka_points * len(lerkas)
-            self.sb.prep_score()
-            self.sb.check_high_score()
-
+        self._when_collisions(collisions)
         self._lerkas_end()
 
     def _fire_missle_a(self):
@@ -211,15 +203,9 @@ class LerkaInvasion:
 
     def _check_misslea_lerka_collisions(self):
         """Reakcja na kolizję między pociskiem A i Lerką."""
-        collisions_a = pygame.sprite.groupcollide(
+        collisions = pygame.sprite.groupcollide(
             self.missles_a, self.lerkas, True, True)
-
-        if collisions_a:
-            for lerkas in collisions_a.values():
-                self.stats.score += self.settings.lerka_points * len(lerkas)
-            self.sb.prep_score()
-            self.sb.check_high_score()
-
+        self._when_collisions(collisions)
         self._lerkas_end()
 
     def _fire_missle_b(self):
@@ -242,16 +228,19 @@ class LerkaInvasion:
 
     def _check_missleb_lerka_collisions(self):
         """Reakcja na kolizję między pociskiem B i Lerką."""
-        collisions_b = pygame.sprite.groupcollide(
+        collisions = pygame.sprite.groupcollide(
             self.missles_b, self.lerkas, True, True)
+        self._when_collisions(collisions)
+        self._lerkas_end()
 
-        if collisions_b:
-            for lerkas in collisions_b.values():
+    def _when_collisions(self, collision):
+        collisions = collision
+
+        if collisions:
+            for lerkas in collisions.values():
                 self.stats.score += self.settings.lerka_points * len(lerkas)
             self.sb.prep_score()
             self.sb.check_high_score()
-
-        self._lerkas_end()
  
     def _update_lerkas(self):
         """Uaktualnienie położenia wszystkich obcych we flocie."""

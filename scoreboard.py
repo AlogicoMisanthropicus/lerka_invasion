@@ -16,6 +16,10 @@ class Scoreboard:
         self.text_color = (0, 0, 0)
         self.font = pygame.font.SysFont(None, 48)
 
+        self.prep_images()
+
+    def prep_images(self):
+        """Wywołania metod przygotowujących obrazy."""
         self.prep_score()
         self.prep_high_score()
         self.prep_level()
