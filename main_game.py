@@ -146,14 +146,11 @@ class LerkaInvasion:
         self.stats.reset_stats()
         self.stats.game_active = True
         self.sb.prep_images()
-        self.lerkas.empty()
-        self.bullets.empty()
-        self.missles_a.empty()
-        self.missles_b.empty()
+        self._emptying_all_bullets_lerkas()
         self._create_fleet()
         self.ship.center_ship()
         pygame.mouse.set_visible(False)
-        
+
     def _fire_bullet(self):
         """Utworzenie nowego pocisku i dodanie go do grupy pocisków."""
         if len(self.bullets) < self.settings.bullets_allowed and (
@@ -251,6 +248,12 @@ class LerkaInvasion:
             self._ship_hit()
 
         self._check_lerkas_left_scr()
+
+    def _emptying_all_bullets_lerkas(self):
+        self.lerkas.empty()
+        self.bullets.empty()
+        self.missles_a.empty()
+        self.missles_b.empty()
 
     def _lerkas_end(self):
         """Działania po zestrzeleniu floty Lerków: pozbycie się pocisków, 
