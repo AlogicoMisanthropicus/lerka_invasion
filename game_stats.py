@@ -8,6 +8,7 @@ class GameStats:
         self.settings = ai_game.settings
         self.reset_stats()
         self.game_active = False
+        self.show_help = False
         self.high_score = self.get_old_high_score()
 
     def get_old_high_score(self):

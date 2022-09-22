@@ -13,6 +13,7 @@ from bullet import Bullet
 from missle_a import MissleA
 from missle_b import MissleB
 from lerka import Lerka
+from help import Help
 
 class LerkaInvasion:
     """
@@ -32,6 +33,7 @@ class LerkaInvasion:
 
         self.stats = GameStats(self)
         self.sb = Scoreboard(self)
+        self.help = Help(self)
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
@@ -50,9 +52,10 @@ class LerkaInvasion:
         self.easy_button = Button(self, "Łatwy")
         self.medium_button = Button(self, "Średni")
         self.hard_button = Button(self, "Piekło")
+        self.help_button = Button(self, "Pomoc")
 
         self.easy_button.rect.top = (
-            self.play_button.rect.top + 1.5*self.play_button.rect.height)
+            self.play_button.rect.top + 2.5*self.play_button.rect.height)
         self.easy_button._update_msg_position()
 
         self.medium_button.rect.top = (
@@ -62,6 +65,10 @@ class LerkaInvasion:
         self.hard_button.rect.top = (
             self.medium_button.rect.top + 1.5*self.play_button.rect.height)
         self.hard_button._update_msg_position()
+
+        self.help_button.rect.bottom = (
+            self.play_button.rect.top - 1.5*self.play_button.rect.height)
+        self.help_button._update_msg_position()
 
     def run_game(self):
         """Rozpoczęcie pętli głównej gry."""
@@ -90,6 +97,7 @@ class LerkaInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
                 self._check_difficulty_buttons(mouse_pos)
+                self._check_help_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
         """Rozpoczęcie nowej gry po kliknięciu przycisku."""
@@ -109,6 +117,14 @@ class LerkaInvasion:
             self.settings.difficulty_level = 'medium'
         elif hard_button_clicked:
             self.settings.difficulty_level = 'hard'
+
+    def _check_help_button(self, mouse_pos):
+        help_button_clicked = self.help_button.rect.collidepoint(mouse_pos)
+        if help_button_clicked:
+            self.stats.show_help = True
+
+    def _create_help_window(self):
+        self.help.show_help_window()
 
     def _check_keydown_events(self, event):
         """Reakcja na naciśnięcie klawisza."""
@@ -145,6 +161,7 @@ class LerkaInvasion:
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.stats.game_active = True
+        self.stats.show_help = False
         self.sb.prep_images()
         self._emptying_all_bullets_lerkas()
         self._create_fleet()
@@ -363,6 +380,9 @@ class LerkaInvasion:
             self.easy_button.draw_button()
             self.medium_button.draw_button()
             self.hard_button.draw_button()
+            self.help_button.draw_button()
+            if self.stats.show_help:
+                self._create_help_window()
 
         #Wyświetelenie ostatnio zmodyfikowanego ekranu.
         pygame.display.flip()
