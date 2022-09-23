@@ -121,8 +121,11 @@ class LerkaInvasion:
     def _check_help_button(self, mouse_pos):
         help_button_clicked = self.help_button.rect.collidepoint(mouse_pos)
         if help_button_clicked:
-            self.stats.show_help = True
-
+            if not self.stats.show_help:
+                self.stats.show_help = True
+            elif self.stats.show_help:
+                self.stats.show_help = False
+        
     def _create_help_window(self):
         self.help.show_help_window()
 
