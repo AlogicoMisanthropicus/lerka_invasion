@@ -15,6 +15,7 @@ from missle_b import MissleB
 from lerka import Lerka
 from help import Help
 
+
 class LerkaInvasion:
     """
     Ogólna klasa przeznaczona do zarządzania zasobami i sposobem 
@@ -149,6 +150,7 @@ class LerkaInvasion:
         elif event.key == pygame.K_g:
             if not self.stats.game_active:
                 self._start_game()
+
     def _check_keyup_events(self, event):
         """Reakcja na zwolnienie klawisza."""
         if event.key == pygame.K_UP:
@@ -174,7 +176,7 @@ class LerkaInvasion:
     def _fire_bullet(self):
         """Utworzenie nowego pocisku i dodanie go do grupy pocisków."""
         if len(self.bullets) < self.settings.bullets_allowed and (
-            self.stats.game_active):
+                self.stats.game_active):
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
 
@@ -183,10 +185,10 @@ class LerkaInvasion:
         Uaktualnienie położenia pocisków i usunięcie tych niewidocznych
          na ekranie.
         """
-        #Uaktualnienie położenia pocisków.
+        # Uaktualnienie położenia pocisków.
         self.bullets.update()
 
-        #Usunięcie pocisków, które znajdują się poza ekranem.
+        # Usunięcie pocisków, które znajdują się poza ekranem.
         for bullet in self.bullets.copy():
             if bullet.rect.left >= self.settings.screen_width:
                 self.bullets.remove(bullet)
@@ -203,7 +205,7 @@ class LerkaInvasion:
     def _fire_missle_a(self):
         """Utworzenie nowego pocisku A i dodanie go do grupy pocisków A."""
         if len(self.missles_a) < self.settings.missles_allowed and (
-            self.stats.game_active):
+                self.stats.game_active):
             new_misslea = MissleA(self)
             self.missles_a.add(new_misslea)
 
@@ -228,7 +230,7 @@ class LerkaInvasion:
     def _fire_missle_b(self):
         """Utworzenie nowego pocisku B i dodanie go do grupy pocisków B."""
         if len(self.missles_b) < self.settings.missles_allowed and (
-            self.stats.game_active):
+                self.stats.game_active):
             new_missleb = MissleB(self)
             self.missles_b.add(new_missleb)
 
@@ -263,7 +265,7 @@ class LerkaInvasion:
         """Uaktualnienie położenia wszystkich obcych we flocie."""
         self._check_fleet_edges()
         self.lerkas.update()
-        #Wykrywanie kolizji między Lerką a statkiem.
+        # Wykrywanie kolizji między Lerką a statkiem.
         if pygame.sprite.spritecollideany(self.ship, self.lerkas):
             self._ship_hit()
 
@@ -279,7 +281,7 @@ class LerkaInvasion:
         """Działania po zestrzeleniu floty Lerków: pozbycie się pocisków, 
         tworzenie nowej floty, zwiększenie prędkości i poziomu etc."""
         if not self.lerkas:
-            #Pozbycie się istniejących pocisków i utworzenie nowej floty.
+            # Pozbycie się istniejących pocisków i utworzenie nowej floty.
             self.bullets.empty()
             self.missles_a.empty()
             self.missles_b.empty()
@@ -298,7 +300,7 @@ class LerkaInvasion:
 
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_width -
-            (5 * lerka_width) - ship_width)
+                             (5 * lerka_width) - ship_width)
         number_rows = available_space_x // (2 * lerka_width)
 
         for row_number in range(number_rows):
@@ -309,12 +311,12 @@ class LerkaInvasion:
         """Utworzenie Lerki i umieszczenie go w rzędzie."""
         lerka = Lerka(self)
         lerka_height, lerka_width = lerka.rect.size
-        #lerka.y = (lerka_height + 2 * lerka_height * lerka_number)
-        #lerka.y = (2 * lerka_height * lerka_number + random_number)
+        # lerka.y = (lerka_height + 2 * lerka_height * lerka_number)
+        # lerka.y = (2 * lerka_height * lerka_number + random_number)
         lerka.y = lerka_height + 2 * lerka_height * lerka_number
         lerka.rect.y = lerka.y
         lerka.x = ((self.settings.screen_width + 5 * lerka.rect.width)
-            - 2 * lerka.rect.width * row_number)
+                   - 2 * lerka.rect.width * row_number)
         lerka.rect.x = lerka.x
         self.lerkas.add(lerka)
 
@@ -365,7 +367,7 @@ class LerkaInvasion:
 
     def _update_screen(self):
         """Uaktualnienie obrazów na ekranie i przejście do nowego ekranu."""
-        #Odświeżenie ekranu w trakcie każdej iteracji pętli.
+        # Odświeżenie ekranu w trakcie każdej iteracji pętli.
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
@@ -387,8 +389,9 @@ class LerkaInvasion:
             if self.stats.show_help:
                 self._create_help_window()
 
-        #Wyświetelenie ostatnio zmodyfikowanego ekranu.
+        # Wyświetelenie ostatnio zmodyfikowanego ekranu.
         pygame.display.flip()
+
 
 if __name__ == '__main__':
     li = LerkaInvasion()

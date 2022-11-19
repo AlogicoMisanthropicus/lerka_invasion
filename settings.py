@@ -11,9 +11,9 @@ class Settings:
         self.bullet_height = 5
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 3
-        #self.lerka_speed = 1.2
-        #self.fleet_move_speed_x = 60
-        #self.fleet_move_speed_y = 60
+        # self.lerka_speed = 1.2
+        # self.fleet_move_speed_x = 60
+        # self.fleet_move_speed_y = 60
         self.missleab_width = 5
         self.missleab_height = 18
         self.missleab_color = (60, 60, 60)

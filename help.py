@@ -1,5 +1,6 @@
 import pygame
 
+
 class Help:
     """Klasa przeznaczona do wyświetlania pomocy."""
 

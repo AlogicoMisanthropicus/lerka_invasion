@@ -1,5 +1,6 @@
 import pygame.font
 
+
 class Button:
 
     def __init__(self, li_game, msg):
@@ -23,7 +24,7 @@ class Button:
         tekstu na przycisku.
         """
         self.msg_image = self.font.render(msg, True, self.text_color,
-            self.button_color)
+                                          self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
@@ -31,6 +32,6 @@ class Button:
         self.msg_image_rect.center = self.rect.center
 
     def draw_button(self):
-        #Wyświetlenie pustego przycisku, a następnie komunikatu na nim.
+        # Wyświetlenie pustego przycisku, a następnie komunikatu na nim.
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)

@@ -1,5 +1,6 @@
 import json
 
+
 class GameStats:
     """Monitorowanie danych statystycznych w grze "Lerka Invasion"."""
 

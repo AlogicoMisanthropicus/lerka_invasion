@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 
+
 class MissleA(Sprite):
     """Klasa przeznaczona do zarządzania pociskiem bocznym A."""
 
@@ -12,7 +13,7 @@ class MissleA(Sprite):
         self.color = li_game.settings.missleab_color
 
         self.rect = pygame.Rect(0, 0, self.settings.missleab_width,
-            self.settings.missleab_height)
+                                self.settings.missleab_height)
         self.rect.midbottom = li_game.ship.rect.midtop
 
         self.y = float(self.rect.y)

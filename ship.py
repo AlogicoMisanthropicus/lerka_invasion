@@ -1,6 +1,7 @@
 import pygame
 from ships_image import ShipsImage
 
+
 class Ship:
     """Klasa przeznaczona do zarządzania statkiem kosmicznym."""
 
@@ -11,20 +12,20 @@ class Ship:
         self.settings = li_game.settings
         self.screen_rect = li_game.screen.get_rect()
 
-        #Wczytanie obrazu statku kosmicznego i pobranie jego prostokąta.
+        # Wczytanie obrazu statku kosmicznego i pobranie jego prostokąta.
         self.image = pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
 
-        #Każdy nowy statek kosmiczny pojawia się na środku ekranu.
+        # Każdy nowy statek kosmiczny pojawia się na środku ekranu.
         self.rect.midleft = self.screen_rect.midleft
 
-        #Położenie pionowe statku jest przechowywane w postaci
+        # Położenie pionowe statku jest przechowywane w postaci
         # liczby zmiennoprzecinkowej.
         self.y = float(self.rect.y)
 
         self.ship_image = ShipsImage(self)
 
-        #Opcje wskazujące na poruszanie się statku.
+        # Opcje wskazujące na poruszanie się statku.
         self.moving_up = False
         self.moving_down = False
         self.moving_left = False
@@ -35,7 +36,7 @@ class Ship:
         Uaktualnienie położenia statku na podstawie opcji wskazującej
         na jego ruch.
         """
-        #Uaktualnienie wartości współrzędnej Y statku, a nie jego prostokąta.
+        # Uaktualnienie wartości współrzędnej Y statku, a nie jego prostokąta.
         if self.moving_up and self.rect.top > self.ship_image.rect.height + 10:
             self.y -= self.settings.ship_speed
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
@@ -45,7 +46,7 @@ class Ship:
         if self.moving_right and self.rect.right < self.screen_rect.width:
             self.x += self.settings.ship_speed
 
-        #Uaktualnienie obiektu rect na podstawie wartości self.y.
+        # Uaktualnienie obiektu rect na podstawie wartości self.y.
         self.rect.y = self.y
         self.rect.x = self.x
 
