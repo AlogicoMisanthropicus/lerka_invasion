@@ -22,6 +22,8 @@ class Settings:
         self.speedup_scale_lerka = 0.028
         self.score_scale = 1.5
 
+        self.fleet_direction = 1
+
         self.difficulty_level = 'medium'
 
         self.initialize_dynamic_settings()
@@ -57,9 +59,7 @@ class Settings:
             self.missles_allowed = 3
             self.lerka_speed_x = 0.48
             self.lerka_speed_y = 0.48
-            self.lerka_points = 80
-
-        self.fleet_direction = 1
+            self.lerka_points = 80  
 
     def increase_speed(self):
         """Zmiana ustawień dotyczących szybkości."""

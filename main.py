@@ -286,6 +286,9 @@ class LerkaInvasion:
             self.missles_a.empty()
             self.missles_b.empty()
             self._create_fleet()
+            # Ruch na początku rundy (w zależności od tego, gdzie zakończył
+            # się w poprzedniej rundzie lub zawsze w dół):
+            self.settings.fleet_direction = 1
             self.settings.increase_speed()
 
             self.stats.level += 1
@@ -293,10 +296,13 @@ class LerkaInvasion:
 
     def _create_fleet(self):
         """Utworzenie pełnej floty Lerków."""
+        # Liczba pionowych rzędów:
         lerka = Lerka(self)
         lerka_height, lerka_width = lerka.rect.size
         available_space_y = self.settings.screen_height - 2 * lerka_height
         number_lerkas_y = available_space_y // (2 * lerka_height)
+        if number_lerkas_y >= 5:
+            number_lerkas_y = 5
 
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_width -
@@ -329,8 +335,9 @@ class LerkaInvasion:
 
     def _change_fleet_direction(self):
         """Zmiana kierunku floty."""
-        for lerka in self.lerkas.sprites():
-            lerka.rect.y -= self.settings.lerka_speed_y
+        # for lerka in self.lerkas.sprites():
+        #    lerka.rect.y -= self.settings.lerka_speed_y
+        # ^NIE WIEM, PO CO KIEDYŚ DAŁEM TE DWIE LINIE
         self.settings.fleet_direction *= -1
 
     def _ship_hit(self):
